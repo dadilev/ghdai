@@ -86,7 +86,7 @@ class AdTemplatesResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            'ad' => RelationManagers\AdsRelationManager::class,
         ];
     }
 
