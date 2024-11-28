@@ -16,11 +16,12 @@ class AdsOverview extends BaseWidget
         $adTemplatesCount = AdTemplates::count();
         $completedAds = Ads::where('status', AdStatus::COMPLETED)->count();
         return [
-            Stat::make('Ads', $adsTotal)->description($adsTotal. ' ads'),
-
+            Stat::make('Ads', $adsTotal)->description($adsTotal. ' ads')
+                ->descriptionIcon('heroicon-m-megaphone'),
             Stat::make('Ad Templates', $adTemplatesCount)->description($adTemplatesCount. ' ad templates')
-                ->descriptionIcon('heroicon-m-user'),
-            Stat::make('Completed Ads', $completedAds)->description($completedAds. ' complated ads')->descriptionIcon('heroicon-m-users'),
+                ->descriptionIcon('heroicon-m-tag'),
+            Stat::make('Completed Ads', $completedAds)->description($completedAds. ' completed ads')
+                ->descriptionIcon('heroicon-m-megaphone'),
         ];
     }
 }
