@@ -42,7 +42,7 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                ChurnRateWidget::class,
                 AdsOverview::class,
-                CompletedAdsChart::class
+                CompletedAdsChart::class,
             ])
             ->middleware([
                 EncryptCookies::class,

@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\AdminResource\Widgets;
 
 use App\Enums\AdStatus;
-use Filament\Forms\Components\DatePicker;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Support\Facades\DB;
 
@@ -17,28 +16,42 @@ class CompletedAdsChart extends ChartWidget
     public ?string $endDate = null;
 
 
-
-    protected function getFormSchema(): array
+    protected function getFilters(): ?array
     {
         return [
-            \Filament\Forms\Components\DatePicker::make('startDate')
-                ->label('Start Date')
-                ->reactive()
-                ->afterStateUpdated(fn () => $this->updateChart()),
-            \Filament\Forms\Components\DatePicker::make('endDate')
-                ->label('End Date')
-                ->reactive()
-                ->afterStateUpdated(fn () => $this->updateChart()),
+            'today' => 'Today',
+            'week' => 'Last week',
+            'month' => 'Last month',
+            'year' => 'This year',
         ];
     }
 
     protected function getData(): array
     {
+        $activeFilter = $this->filter;
+
+
         $query = DB::table('ads')
-            ->whereNotNull('created_at');
+            ->where('status', AdStatus::COMPLETED->value);
 
         if ($this->startDate && $this->endDate) {
             $query->whereBetween('created_at', [$this->startDate, $this->endDate]);
+        }
+        switch ($activeFilter) {
+            case 'today':
+                $query->whereDate('created_at', today());
+                break;
+            case 'week':
+                $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
+                break;
+            case 'month':
+                $query->whereMonth('created_at', now()->month);
+                break;
+            case 'year':
+                $query->whereYear('created_at', now()->year);
+                break;
+            default:
+                $query->whereMonth('created_at', now()->month);
         }
 
         $ads = $query
