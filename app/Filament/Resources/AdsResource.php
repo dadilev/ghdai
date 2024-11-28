@@ -60,7 +60,10 @@ class AdsResource extends Resource
                     ->badge(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->options(fn () => collect(AdStatus::cases())->mapWithKeys(fn (AdStatus $status) => [
+                        $status->value => $status->getLabel(),
+                    ]))
             ])
             ->actions([
                 Tables\Actions\Action::make('generateAdTemplate')

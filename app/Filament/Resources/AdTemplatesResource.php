@@ -66,7 +66,10 @@ class AdTemplatesResource extends Resource
                     ->badge(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->options(fn () => collect(AdTemplateStatus::cases())->mapWithKeys(fn (AdTemplateStatus $status) => [
+                        $status->value => $status->getLabel(),
+                    ]))
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
