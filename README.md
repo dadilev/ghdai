@@ -32,10 +32,16 @@ For users
 - Super admin ( email: editor@editor.com, password: editor )
 - Super admin ( email: viewer@viewer.com, password: viewer )
 
+
+## Upgrade to Laravel 11
+
+Run the following commands:
+
+- php artisan app:update-core
+
+
 ## TODO
 
 - Add some kind of documentation.
 - Add tests.
-- Fix an issue when try to upgrade laravel to version 11 with artisan command.
-
 
