@@ -21,8 +21,21 @@ database credentials and run the following commands:
 
 Most of data is included into demo database if you want to use it.
 
+## Usage
+
+Visit [http://localhost:8000/admin](http://localhost:8000/admin) and login.
+
+For users 
+
+- Super admin ( email: super@super.com, password: super )
+- Admin ( email: admin@admin.com, password: admin )
+- Super admin ( email: editor@editor.com, password: editor )
+- Super admin ( email: viewer@viewer.com, password: viewer )
+
 ## TODO
 
 - Add some kind of documentation.
 - Add tests.
 - Fix an issue when try to upgrade laravel to version 11 with artisan command.
+
+
