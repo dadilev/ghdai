@@ -10,8 +10,10 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class AdsOverview extends BaseWidget
 {
+    protected ?string $heading = 'Ads Overview';
     protected function getStats(): array
     {
+
         $adsTotal = Ads::count();
         $adTemplatesCount = AdTemplates::count();
         $completedAds = Ads::where('status', AdStatus::COMPLETED)->count();

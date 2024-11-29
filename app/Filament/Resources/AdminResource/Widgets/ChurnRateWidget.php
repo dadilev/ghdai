@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 
 class ChurnRateWidget extends BaseWidget
 {
+    protected ?string $heading = 'Churn Rate';
+
     protected function getStats(): array
     {
         // Define the period
@@ -37,7 +39,7 @@ class ChurnRateWidget extends BaseWidget
         $totalUsers = User::count();
         $totalCustomers = Customer::count();
         return [
-            Stat::make('Churn Rate', $churnRate. '%')
+            Stat::make('Churn Rate last month', $churnRate. '%')
                 ->description($usersAtEndOfPeriod. ' users')
                 ->descriptionIcon('heroicon-m-arrow-trending-down'),
             Stat::make('Total users', $totalUsers)->description($totalUsers. ' users')
