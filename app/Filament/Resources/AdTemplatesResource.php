@@ -36,6 +36,7 @@ class AdTemplatesResource extends Resource
                         Forms\Components\RichEditor::make('description'),
                         Forms\Components\TextInput::make('canva_url')
                             ->label('Canva URL')
+                            //custom validation for canva url
                             ->rules([
                                 'required',
                                 'regex:/^https:\/\/(www\.)?canva\.com\//',
@@ -46,6 +47,7 @@ class AdTemplatesResource extends Resource
                 Forms\Components\Group::make()->schema([
                     Forms\Components\Section::make('Status and relations')->schema([
                         Forms\Components\Select::make('status')
+                            // Get custom label from enum Enums\AdTemplateStatus
                             ->options(fn () => collect(AdTemplateStatus::cases())->mapWithKeys(fn (AdTemplateStatus $status) => [
                                 $status->value => $status->getLabel(),
                             ]))
@@ -75,6 +77,7 @@ class AdTemplatesResource extends Resource
                     ->badge(),
             ])
             ->filters([
+                //get a label from enum Enums\AdTemplateStatus
                 Tables\Filters\SelectFilter::make('status')
                     ->options(fn () => collect(AdTemplateStatus::cases())->mapWithKeys(fn (AdTemplateStatus $status) => [
                         $status->value => $status->getLabel(),

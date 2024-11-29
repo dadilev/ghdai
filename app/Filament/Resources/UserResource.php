@@ -63,8 +63,9 @@ class UserResource extends Resource
                     [
                         Tables\Actions\EditAction::make(),
                         Tables\Actions\DeleteAction::make()
+                            //super admin can not be deleted ( only can delete himself )
                             ->before(function ($record, Tables\Actions\DeleteAction $action) {
-                                if (strtolower($record->roles->first()->name) === 'super admin') {
+                                if (auth()->user()->id === $record->id && strtolower($record->roles->first()->name) === 'super admin') {
                                     Notification::make()
                                         ->title('Action Denied')
                                         ->body('You cannot delete a Super Admin.')

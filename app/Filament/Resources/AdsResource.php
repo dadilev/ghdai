@@ -71,24 +71,26 @@ class AdsResource extends Resource
                     ]))
             ])
             ->actions([
+                //custom action for generate ad template from ad
                 Tables\Actions\Action::make('generateAdTemplate')
                     ->label('Generate Template')
                     ->action(function (Ads $record, array $data): void {
                         self::processAdTemplate($record, $data);
-                    })
+                    })->visible(fn () => auth()->user()->hasRole('Admin') || auth()->user()->hasRole('Editor') || auth()->user()->hasRole('Super Admin'))
                     ->form([
                         Forms\Components\TextInput::make('title')
                             ->maxLength(255)->required(),
                         Forms\Components\RichEditor::make('description'),
                         Forms\Components\TextInput::make('canva_url')
                             ->label('Canva URL')
+                            //custom regex for handle canva url validation
                             ->rules([
                                 'required',
                                 'regex:/^https:\/\/(www\.)?canva\.com\//',
                             ])
                             ->helperText('Provide a valid Canva link, e.g., https://www.canva.com/design/...'),
 
-
+                        //use statuses Enum from Enums\AdTemplateStatus
                         Forms\Components\Select::make('status')
                             ->options(fn () => collect(AdTemplateStatus::cases())->mapWithKeys(fn (AdTemplateStatus $status) => [
                                 $status->value => $status->getLabel(),
