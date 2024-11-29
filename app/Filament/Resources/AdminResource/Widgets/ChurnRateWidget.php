@@ -15,32 +15,33 @@ class ChurnRateWidget extends BaseWidget
 
     protected function getStats(): array
     {
-        // Define the period
-        $startOfMonth = Carbon::now()->startOfMonth()->subMonth();
-        $endOfMonth = Carbon::now()->startOfMonth();
+        $churnRate = 0;
+        // Define the period (current month)
+        $startOfMonth = now()->startOfMonth();
+        $endOfMonth = now()->endOfMonth();
 
-        // Query the total users at the start of the period
-        $usersAtStartOfPeriod = DB::table('customers')
-            ->where('created_at', '<', $startOfMonth)
-            ->count();
-
-        // Query the total active users at the end of the period
-        $usersAtEndOfPeriod = DB::table('customers')
+        // Total users at the start of the period
+        $usersAtStart = DB::table('customers')
             ->where('active', true)
-            ->where('updated_at', '<', $endOfMonth)
-            ->count();
+            ->where('created_at', '<=', $startOfMonth)
+            ->count() ?? 0;
+
+        // Active users at the end of the period
+        $activeUsersAtEnd = DB::table('customers')
+            ->where('active', false)
+            ->where('created_at', '<=', $endOfMonth)
+            ->count() ?? 0;
 
         // Calculate Churn Rate
-        if ($usersAtStartOfPeriod > 0) {
-            $churnRate = (($usersAtStartOfPeriod - $usersAtEndOfPeriod) / $usersAtStartOfPeriod) * 100;
-        }else{
-            $churnRate = 0;
+        if ($usersAtStart != 0 && $activeUsersAtEnd != 0) {
+            $churnRate = (int)((($usersAtStart - $activeUsersAtEnd) / $usersAtStart) * 100);
         }
+
         $totalUsers = User::count();
         $totalCustomers = Customer::count();
         return [
             Stat::make('Churn Rate last month', $churnRate. '%')
-                ->description($usersAtEndOfPeriod. ' users')
+                ->description($activeUsersAtEnd. ' users')
                 ->descriptionIcon('heroicon-m-arrow-trending-down'),
             Stat::make('Total users', $totalUsers)->description($totalUsers. ' users')
                 ->descriptionIcon('heroicon-m-user'),
