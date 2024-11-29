@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost:3306
--- Време на генериране: 29 ное 2024 в 13:49
+-- Време на генериране: 29 ное 2024 в 15:40
 -- Версия на сървъра: 5.7.24
 -- Версия на PHP: 8.3.9
 
@@ -826,7 +826,6 @@ CREATE TABLE `model_has_roles` (
 --
 
 INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
-(1, 'App\\Models\\User', 1),
 (1, 'App\\Models\\User', 2),
 (2, 'App\\Models\\User', 3),
 (3, 'App\\Models\\User', 4),
@@ -1109,7 +1108,6 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Denis', 'dadilev@gmail.com', NULL, '$2y$12$g5cdu8jvMB7j3GrNmN556.kWElb2MsTuGU35rMzDi8mFx448Ceh9K', NULL, '2024-11-27 07:46:46', '2024-11-27 07:46:46'),
 (2, 'Super Admin', 'super@super.com', NULL, '$2y$12$D8RzaGP9M6s4cCCFV80wIejd2jYbeqpDQKefyDZsVoNb3VfL0GKj6', NULL, '2024-11-27 18:54:50', '2024-11-29 09:45:45'),
 (3, 'Administrator', 'admin@admin.com', NULL, '$2y$12$h3nstV/iqr7rwQoBHGTCAeESguIDYHBEF7ex6emca1patFdlxgpUS', NULL, '2024-11-27 18:59:56', '2024-11-29 09:44:58'),
 (4, 'The Editor', 'editor@editor.com', NULL, '$2y$12$JL7rpVB0mupPI8tF2IWG8OuzTv6Q3nyg/KosDwnWrR795eVvlm9gG', NULL, '2024-11-27 19:00:15', '2024-11-29 09:44:47'),
