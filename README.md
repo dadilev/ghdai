@@ -11,7 +11,7 @@ Project is for controlling your Ads and their Ad templates.
 
 ## Installation
 
-Create a database in your phpMyAdmin, edit .env.example with your
+Create a database in your phpMyAdmin import a dump from `database/filament.sql`, edit .env.example with your
 database credentials and run the following commands:
 
 - composer install
