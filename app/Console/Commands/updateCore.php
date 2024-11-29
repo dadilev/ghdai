@@ -37,9 +37,13 @@ class updateCore extends Command
         $composerJsonPath = base_path('composer.json');
         $composerJson = json_decode(file_get_contents($composerJsonPath), true);
 
+        // Update PHP version to 8.2
+        $composerJson['require']['php'] = '^8.2';
+
         // Ensure all Laravel dependencies are updated to version 11.x
         $composerJson['require']['laravel/framework'] = '^11.0';
-        $composerJson['require']['php'] = '^8.1';  // Update PHP version if needed for Laravel 11
+        $composerJson['require']['laravel/sanctum'] = '^4.0';
+        $composerJson['require-dev']['nunomaduro/collision'] = '^8.1';
 
         // Additional checks for other dependencies like caching, queues, etc.
         $composerJson['require'] = array_map(function ($package) {
@@ -71,6 +75,9 @@ class updateCore extends Command
         shell_exec('php artisan route:clear');
         $this->info('Caches cleared.');
 
+
+        //optimize and clear!
+        shell_exec('php artisan optimize:clear');
 
         // Run PHPUnit tests
         $this->info('Running tests...');
