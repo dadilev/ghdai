@@ -10,6 +10,9 @@ use App\Models\Ads;
 use App\Models\AdTemplates;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -46,6 +49,8 @@ class AdsResource extends Resource
                             ]))
                             ->default(AdStatus::PENDING->value)
                             ->required()
+                            ->live()
+                            ->searchable()
                     ])
                 ])->columnSpan(1),
             ])->columns(3);
@@ -89,7 +94,10 @@ class AdsResource extends Resource
                                 $status->value => $status->getLabel(),
                             ]))
                             ->default(AdTemplateStatus::DRAFT->value)
-                            ->required(),
+                            ->required()
+                            ->live()
+                            ->preload()
+                            ->searchable(),
 
                     ])
                     ->modalHeading('Generate Ad Template')
@@ -105,6 +113,27 @@ class AdsResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ]);
+    }
+
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make('Main Details')->schema([
+                    TextEntry::make('title')->label('Title'),
+                    TextEntry::make('status')
+                        ->label('Status')
+                        ->badge(),
+
+                    TextEntry::make('url')
+                        ->label('URL'),
+                ])->columns(3),
+                Section::make('Description')->schema([
+                    TextEntry::make('description')
+                        ->label('')->html(),
+                ])
             ]);
     }
 

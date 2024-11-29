@@ -6,8 +6,12 @@ use App\Enums\AdTemplateStatus;
 use App\Filament\Resources\AdTemplatesResource\Pages;
 use App\Filament\Resources\AdTemplatesResource\RelationManagers;
 use App\Models\AdTemplates;
+use Filament\Actions\ActionGroup;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Infolists\Components\Section;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -46,11 +50,16 @@ class AdTemplatesResource extends Resource
                                 $status->value => $status->getLabel(),
                             ]))
                             ->default(AdTemplateStatus::DRAFT->value)
-                            ->required(),
+                            ->required()
+                            ->live()
+                            ->searchable(),
                         Forms\Components\Select::make('ad_id')
                             ->label('Ad')
                             ->required()
-                            ->relationship('ad', 'title'),
+                            ->relationship('ad', 'title')
+                            ->live()
+                            ->preload()
+                            ->searchable(),
                     ])
                 ])
             ])->columns(3);
@@ -72,9 +81,11 @@ class AdTemplatesResource extends Resource
                     ]))
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make()
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make()
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -83,6 +94,27 @@ class AdTemplatesResource extends Resource
             ]);
     }
 
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                Section::make('Ad Template details')->schema([
+                    TextEntry::make('title')->label('Title'),
+                    TextEntry::make('url')
+                        ->label('URL'),
+
+                    TextEntry::make('description')
+                        ->label('Description')->html(),
+                ])->columns(2),
+                Section::make('Status and relations')->schema([
+                    TextEntry::make('status')
+                        ->label('Status')
+                        ->badge(),
+                    TextEntry::make('ad.title')
+                        ->label('Related Ad')
+                ])->columns(2)
+            ]);
+    }
     public static function getRelations(): array
     {
         return [
