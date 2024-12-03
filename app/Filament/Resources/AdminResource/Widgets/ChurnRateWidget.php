@@ -4,6 +4,7 @@ namespace App\Filament\Resources\AdminResource\Widgets;
 
 use App\Models\Customer;
 use App\Models\User;
+use App\Services\ChurnService;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Carbon;
@@ -13,39 +14,15 @@ class ChurnRateWidget extends BaseWidget
 {
     protected ?string $heading = 'Churn Rate';
 
-    protected function getStats(): array
+    protected function getCards(): array
     {
-        $churnRate = 0;
-        // Define the period (current month)
-        $startOfMonth = now()->startOfMonth();
-        $endOfMonth = now()->endOfMonth();
+        $stats = app(ChurnService::class)->calculateChurnStats();
 
-        // Total users at the start of the period
-        $usersAtStart = DB::table('customers')
-            ->where('active', true)
-            ->where('created_at', '<=', $startOfMonth)
-            ->count() ?? 0;
-
-        // Active users at the end of the period
-        $activeUsersAtEnd = DB::table('customers')
-            ->where('active', false)
-            ->where('created_at', '<=', $endOfMonth)
-            ->count() ?? 0;
-
-        // Calculate Churn Rate
-        if ($usersAtStart != 0 && $activeUsersAtEnd != 0) {
-            $churnRate = (int)((($usersAtStart - $activeUsersAtEnd) / $usersAtStart) * 100);
-        }
-
-        $totalUsers = User::count();
-        $totalCustomers = Customer::count();
         return [
-            Stat::make('Churn Rate last month', $churnRate. '%')
-                ->description($activeUsersAtEnd. ' users')
-                ->descriptionIcon('heroicon-m-arrow-trending-down'),
-            Stat::make('Total users', $totalUsers)->description($totalUsers. ' users')
-                ->descriptionIcon('heroicon-m-user'),
-            Stat::make('Total Customers', $totalCustomers)->description($totalCustomers. ' customers')->descriptionIcon('heroicon-m-users'),
+            BaseWidget\Card::make('Active Customers', $stats['activeCustomers']),
+            BaseWidget\Card::make('New Customers (30 days)', $stats['newCustomers']),
+            BaseWidget\Card::make('Churned Customers', $stats['churnedCustomers']),
+            BaseWidget\Card::make('Churn Rate (%)', $stats['churnRate']),
         ];
     }
 }

@@ -15,18 +15,35 @@ class CustomersTableSeeder extends Seeder
     public function run(): void
     {
         $faker = Faker::create();
+        $deleteOld = DB::table('customers')->delete();
         $customers = [];
 
-        for ($i = 0; $i < 600; $i++) {
-            // Generate a random date within the last 2 months
-            $createdAt = $faker->dateTimeBetween('-2 months', 'now');
-            $updatedAt = $faker->dateTimeBetween($createdAt, 'now');
+
+        // Seed active subscribers created more than 30 days ago
+        for ($i = 0; $i < 70; $i++) {
+            $created_at = $faker->dateTimeBetween('-60 days', '-31 days');
+            $churned_at = rand(0, 1) ? $faker->dateTimeBetween('-30 days', 'now') : null;
 
             $customers[] = [
-                'name' => $faker->company,
-                'active' => $faker->boolean(70), // 70% chance to be active
-                'created_at' => $createdAt,
-                'updated_at' => $updatedAt,
+                'id' => $i + 1,
+                'name' => $faker->name,
+                'mrr' => $churned_at ? 0 : $faker->randomFloat(2, 10, 100),
+                'created_at' => $created_at,
+                'churned_at' => $churned_at,
+            ];
+        }
+
+        // Seed new subscribers created in the past 30 days
+        for ($i = 70; $i < 100; $i++) {
+            $created_at = $faker->dateTimeBetween('-30 days', 'now');
+            $churned_at = rand(0, 1) ? $faker->dateTimeBetween($created_at, 'now') : null;
+
+            $customers[] = [
+                'id' => $i + 1,
+                'name' => $faker->name,
+                'mrr' => $churned_at ? 0 : $faker->randomFloat(2, 10, 100),
+                'created_at' => $created_at,
+                'churned_at' => $churned_at,
             ];
         }
 

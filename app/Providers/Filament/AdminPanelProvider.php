@@ -3,6 +3,7 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Resources\AdminResource\Widgets\AdsOverview;
+use App\Filament\Resources\AdminResource\Widgets\ChurnRateChart;
 use App\Filament\Resources\AdminResource\Widgets\ChurnRateWidget;
 use App\Filament\Resources\AdminResource\Widgets\CompletedAdsChart;
 use Filament\Http\Middleware\Authenticate;
@@ -43,6 +44,7 @@ class AdminPanelProvider extends PanelProvider
                ChurnRateWidget::class,
                 AdsOverview::class,
                 CompletedAdsChart::class,
+                ChurnRateChart::class
             ])
             ->middleware([
                 EncryptCookies::class,

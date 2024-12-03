@@ -39,6 +39,9 @@ Run the following commands:
 
 - php artisan app:update-core
 
+## Changes 03.12.2024
+
+- Pull new changes from repo and run `php artisan migrate:seed`. That command will seed new fresh data for customers why affect on the Churn Rate. Added a new chart for visualise the Churn Rate.
 
 ## TODO
 
